@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html.dark {
+  background: #0f172a;
+}
+
+.app-bg {
+  background: linear-gradient(180deg, #0f172a 0%, #071023 100%);
+  min-height: 100vh;
+  color: #e6eef8;
+}
+
+.card {
+  background-color: #1e293b;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.accent-gradient {
+  background-image: linear-gradient(90deg, #7c3aed 0%, #06b6d4 100%);
+}
