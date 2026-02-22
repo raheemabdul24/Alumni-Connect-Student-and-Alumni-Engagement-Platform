@@ -12,12 +12,22 @@ const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 const server = http.createServer(app);
 const { Server } = require('socket.io');
-const io = new Server(server, { cors: { origin: '*' } });
+
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',')
+  : ['http://localhost:5173'];
+
+const io = new Server(server, {
+  cors: { origin: allowedOrigins, credentials: true },
+});
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
+
+// Health-check endpoint (Render pings this)
+app.get('/health', (_req, res) => res.status(200).json({ status: 'ok' }));
 
 app.use('/api', routes);
 app.use(errorHandler);
