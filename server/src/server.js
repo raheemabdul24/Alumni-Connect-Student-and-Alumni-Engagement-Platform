@@ -15,14 +15,18 @@ const { Server } = require('socket.io');
 
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(',')
-  : ['http://localhost:5173'];
+  : undefined; // undefined = allow all origins (dev / no frontend yet)
 
 const io = new Server(server, {
-  cors: { origin: allowedOrigins, credentials: true },
+  cors: { origin: allowedOrigins || '*', credentials: !!allowedOrigins },
 });
 
 app.use(helmet());
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(
+  cors(allowedOrigins
+    ? { origin: allowedOrigins, credentials: true }
+    : {})
+);
 app.use(express.json());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200 }));
 
